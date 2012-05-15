@@ -10,9 +10,7 @@ import ch.reevolt.metronome.Constants.*;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,7 +38,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 
 	private State state = State.PAUSE;
 
-	private Position cursorPosition = Position.LEFT;
+	private int cursorPosition = Constants.LEFT;
 
 	// the wheel
 	Wheel wheel;
@@ -90,7 +88,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
 
 		/**
-		 * The handler to execute asynchronus taks
+		 * The handler to execute asynchronous tasks
 		 */
 		handler = new Handler() {
 			@Override
@@ -148,7 +146,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 * cursor layout
 		 */
 		layout_cursor_container = (FrameLayout) findViewById(R.id.layout_cursor_container);
-		cursor = (ImageView)findViewById(R.id.layout_cursor);
+		cursor = (ImageView) findViewById(R.id.layout_cursor);
 
 		/**
 		 * The metronome ticker
@@ -173,10 +171,10 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 */
 		setTempo(0);
 	}
-	
-	public void initializeAnimation(){
+
+	public void initializeAnimation() {
 		/**
-		 * Animations for cursor TODO get image width dynamically
+		 * Animations for cursor
 		 */
 		animLeft2Right = new TranslateAnimation(0, parentWidth, 0, 0);
 		animLeft2Right.setInterpolator(new LinearInterpolator());
@@ -212,7 +210,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		case R.id.button_state:
 			if (state == State.PAUSE) {
 				// set layout parent width
-				if (parentWidth == 0){
+				if (parentWidth == 0) {
 					parentWidth = layout_cursor_container.getWidth();
 					initializeAnimation();
 				}
@@ -239,8 +237,8 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				ticker.stop();
 
 				// replace cursor at the right emplacement
-				cursorPosition = cursorPosition == Position.LEFT ? Position.RIGHT
-						: Position.LEFT;
+				//cursorPosition = cursorPosition == Constants.LEFT ? Constants.RIGHT
+					//	: Constants.LEFT;
 
 			}
 			break;
@@ -278,14 +276,19 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void onTick(int time) {
 		// start sound
 		// ....
+		
+		cursorPosition = cursorPosition == Constants.LEFT ? Constants.RIGHT
+				: Constants.LEFT;
+		
+		handler.sendEmptyMessage(cursorPosition);
 
-		if (cursorPosition == Position.RIGHT) {
-			cursorPosition = Position.LEFT;
+		/*if (cursorPosition == Constants.RIGHT) {
+			cursorPosition = Constants.LEFT;
 			handler.sendEmptyMessage(Constants.LEFT);
 		} else {
-			cursorPosition = Position.RIGHT;
+			cursorPosition = Constants.RIGHT;
 			handler.sendEmptyMessage(Constants.RIGHT);
-		}
+		}*/
 	}
 
 	/*

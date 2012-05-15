@@ -8,10 +8,6 @@ public class Constants {
 	public enum State {
 		PLAY, PAUSE
 	}
-
-	public enum Position {
-		LEFT, RIGHT
-	}
 	
 	/*
 	 * final constants for Handler
