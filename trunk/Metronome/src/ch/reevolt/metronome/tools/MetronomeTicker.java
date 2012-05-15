@@ -1,21 +1,20 @@
 package ch.reevolt.metronome.tools;
 
+import ch.reevolt.metronome.Constants.*;
+
 public class MetronomeTicker extends Ticker {
 
 	String[] tempoString = { "Largo", "Lento", "Adagio", "Andante", "Moderato",
 			"Allegretto", "Allegro", "Presto", "Prestissimo" };
 
-	public enum Tempo {
-		BINARY, TERNARY
-	}
-
-	public enum Length {
-		CROTCHET, QUAVER
-	}
+	
+	
+	private int tempo_int = 60;
+	private int time = 1000;
 
 	Tempo mesuration = Tempo.BINARY;
 	Length note = Length.CROTCHET;
-	String tempo;
+	String tempo_string;
 
 	public MetronomeTicker() {
 		super();
@@ -23,37 +22,39 @@ public class MetronomeTicker extends Ticker {
 
 	public void setTempo(int tempo) {
 
-		int intTempo = tempo;
+		int tempo_temp = tempo;
 
 		switch (note) {
 		case CROTCHET:
-			intTempo = tempo;
+			tempo_temp = tempo;
 			break;
 		case QUAVER:
-			intTempo = 2 * tempo;
+			tempo_temp = 2 * tempo;
 			break;
 		}
+		
+		this.time = (60 * 1000) / tempo_temp;
 
-		super.setTime((60 * 1000) / intTempo);
+		super.setTime(time);
 
 		if (tempo < 60)
-			this.tempo = tempoString[0];
+			this.tempo_string = tempoString[0];
 		else if (tempo < 68)
-			this.tempo = tempoString[1];
+			this.tempo_string = tempoString[1];
 		else if (tempo < 80)
-			this.tempo = tempoString[2];
+			this.tempo_string = tempoString[2];
 		else if (tempo < 100)
-			this.tempo = tempoString[3];
+			this.tempo_string = tempoString[3];
 		else if (tempo < 112)
-			this.tempo = tempoString[4];
+			this.tempo_string = tempoString[4];
 		else if (tempo < 128)
-			this.tempo = tempoString[5];
+			this.tempo_string = tempoString[5];
 		else if (tempo < 160)
-			this.tempo = tempoString[6];
+			this.tempo_string = tempoString[6];
 		else if (tempo < 200)
-			this.tempo = tempoString[7];
+			this.tempo_string = tempoString[7];
 		else
-			this.tempo = tempoString[8];
+			this.tempo_string = tempoString[8];
 	}
 
 	public void setMesure(Tempo mesuration) {
@@ -65,7 +66,16 @@ public class MetronomeTicker extends Ticker {
 	}
 	
 	public String getTempoString(){
-		return this.tempo;
+		return this.tempo_string;
 	}
+	
+	public int getTempo(){
+		return tempo_int;
+	}
+	
+	public int getTime(){
+		return time;
+	}
+
 
 }

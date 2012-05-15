@@ -6,6 +6,7 @@ import ch.reevolt.metronome.tools.Listener;
 import ch.reevolt.metronome.tools.MetronomeTicker;
 import ch.reevolt.metronome.tools.Ticker.OnTickListener;
 import ch.reevolt.sound.SoundManager;
+import ch.reevolt.metronome.Constants.*;
 
 import android.app.Activity;
 import android.graphics.Typeface;
@@ -30,20 +31,9 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	// used to catch asynchronous tasks
 	private Handler handler;
 
-	private int tempo = 60;
-	private int time = 1000;
-
 	private MetronomeTicker ticker;
 
-	private enum State {
-		PLAY, PAUSE
-	}
-
 	private State state = State.PAUSE;
-
-	private enum Position {
-		LEFT, RIGHT
-	}
 
 	private Position cursorPosition = Position.LEFT;
 
@@ -54,7 +44,8 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	TextView tempo_view;
 	TextView tempo_txt;
 
-	Listener listener;
+	// tempo listener
+	Listener tap_listener;
 
 	// all buttons
 	ImageView button_plus;
@@ -150,11 +141,11 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 */
 		animLeft2Right = new TranslateAnimation(0, parentWidth, 0, 0);
 		animLeft2Right.setInterpolator(new LinearInterpolator());
-		animLeft2Right.setDuration(time);
+		animLeft2Right.setDuration(ticker.getTime());
 
 		animRight2Left = new TranslateAnimation(parentWidth, 0, 0, 0);
 		animRight2Left.setInterpolator(new LinearInterpolator());
-		animRight2Left.setDuration(time);
+		animRight2Left.setDuration(ticker.getTime());
 
 		/**
 		 * Sound manager
@@ -166,7 +157,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		/**
 		 * The tempo listener
 		 */
-		listener = new Listener();
+		tap_listener = new Listener();
 
 		/**
 		 * The metronome ticker
@@ -186,13 +177,13 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void setTempo(int tempo) {
 
 		// increment or decrement tempo
-		this.tempo = (tempo * 115 / 36) + 155;
+		ticker.setTempo((tempo * 115 / 36) + 155);
 
 		// display tempo
-		tempo_view.setText("" + this.tempo);
+		tempo_view.setText("" + ticker.getTempoString());
 
 		// update ticker speed
-		ticker.setTempo(this.tempo);
+		ticker.setTempo(ticker.getTempo());
 		
 		Message msg = new Message();
 		msg.obj = ticker.getTempoString();
@@ -238,7 +229,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 			}
 			break;
 		case R.id.button_micro:
-			setTempo((MetronomeTicker.toBPM(listener.tick()) - 155) * 36 / 115);
+			setTempo((MetronomeTicker.toBPM(tap_listener.tick()) - 155) * 36 / 115);
 			break;
 		}
 
@@ -288,7 +279,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	 */
 	public void onTickCanceled() {
 		// change time to restart anim
-		time = -1;
+		ticker.setTempo(-1);
 		// stop the cursor
 	}
 

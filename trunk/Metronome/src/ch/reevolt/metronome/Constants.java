@@ -2,12 +2,26 @@ package ch.reevolt.metronome;
 
 public class Constants {
 	
-	private enum State {
+	/*
+	 * For MainActivity 
+	 */
+	public enum State {
 		PLAY, PAUSE
 	}
 	
-	private enum Position {
+	public enum Position {
 		LEFT, RIGHT
+	}
+	
+	/*
+	 * For metronome
+	 */
+	public enum Tempo {
+		BINARY, TERNARY
+	}
+
+	public enum Length {
+		CROTCHET, QUAVER
 	}
 
 }
