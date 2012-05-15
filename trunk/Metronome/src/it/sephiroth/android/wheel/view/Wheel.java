@@ -1,5 +1,6 @@
 package it.sephiroth.android.wheel.view;
 
+import ch.reevolt.metronome.Constants;
 import ch.reevolt.metronome.R;
 import it.sephiroth.android.wheel.easing.Easing;
 import it.sephiroth.android.wheel.easing.Sine;
@@ -644,8 +645,16 @@ public class Wheel extends View implements OnGestureListener {
 	 * @param newX
 	 * 			the new X
 	 */
-	public void rotate(int step){
+	/*public void rotate(int step){
 		mFlingRunnable.startUsingVelocity(mOriginalDeltaX, (int) step);
+	}*/
+	
+	public void rotate(int direction){
+		if(direction == Constants.LEFT)
+			mFlingRunnable.startUsingDistance(mOriginalDeltaX, -1 * 15);
+		else
+			mFlingRunnable.startUsingDistance(mOriginalDeltaX, 1 * 15);
+		
 	}
 	
 	

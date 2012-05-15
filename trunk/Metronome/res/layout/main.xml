@@ -85,7 +85,7 @@
 					android:layout_weight="1">
 							
 						<TextView
-				            android:id="@+id/tempo_txt"
+				            android:id="@+id/tempo_int"
 				            android:layout_width="wrap_content"
 				            android:layout_height="wrap_content"
 				            android:layout_gravity="top|center_horizontal"

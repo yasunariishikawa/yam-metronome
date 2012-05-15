@@ -9,10 +9,12 @@ import ch.reevolt.sound.SoundManager;
 import ch.reevolt.metronome.Constants.*;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,6 +33,8 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	// used to catch asynchronous tasks
 	private Handler handler;
 
+	private Handler vibratorHandler;
+
 	private MetronomeTicker ticker;
 
 	private State state = State.PAUSE;
@@ -41,8 +45,8 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	Wheel wheel;
 
 	//
-	TextView tempo_view;
-	TextView tempo_txt;
+	TextView tempo_view_int;
+	TextView tempo_view_string;
 
 	// tempo listener
 	Listener tap_listener;
@@ -62,6 +66,9 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	// size of the parent of cursor
 	int parentWidth;
 
+	// vibrator
+	Vibrator vibrator;
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,22 +83,30 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		setContentView(R.layout.main);
 
 		/**
+		 * get vibrator
+		 */
+		vibrator = (Vibrator) this.getSystemService(Context.VIBRATOR_SERVICE);
+
+		/**
 		 * The handler to execute asynchronus taks
 		 */
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				// start cursor animation
-				if(msg.obj instanceof String){
-					tempo_txt.setTag("" + msg.obj);
+
+				super.handleMessage(msg);
+
+				switch (msg.what) {
+				case Constants.MSG_VIBRATE:
+					vibrator.vibrate(10);
+					break;
+				case Constants.LEFT:
+					cursor.startAnimation(animLeft2Right);
+					break;
+				case Constants.RIGHT:
+					cursor.startAnimation(animRight2Left);
+					break;
 				}
-				else{
-					if (cursorPosition == Position.LEFT)
-						cursor.startAnimation(animLeft2Right);
-					else
-						cursor.startAnimation(animRight2Left);
-				}
-				
 			}
 		};
 
@@ -104,12 +119,12 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		/**
 		 * Tempo visualizer
 		 */
-		tempo_view = (TextView) findViewById(R.id.tempo_txt);
+		tempo_view_int = (TextView) findViewById(R.id.tempo_int);
 		Typeface tf = Typeface
 				.createFromAsset(getAssets(), "fonts/digital.ttf");
-		tempo_view.setTypeface(tf);
+		tempo_view_int.setTypeface(tf);
 
-		tempo_txt = (TextView) findViewById(R.id.tempo_txt);
+		tempo_view_string = (TextView) findViewById(R.id.tempo_txt);
 
 		/**
 		 * set listener for play/pause button
@@ -134,11 +149,17 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		parentWidth = ((ImageView) findViewById(R.id.layout_cursor_mask))
 				.getMeasuredWidth();
 
-		parentWidth = 600;
+		/**
+		 * The metronome ticker
+		 */
+		ticker = new MetronomeTicker();
+		ticker.setOnTickListener(this);
 
 		/**
-		 * Animations for cursor
+		 * Animations for cursor TODO get image width dynamically
 		 */
+		parentWidth = 600;
+
 		animLeft2Right = new TranslateAnimation(0, parentWidth, 0, 0);
 		animLeft2Right.setInterpolator(new LinearInterpolator());
 		animLeft2Right.setDuration(ticker.getTime());
@@ -160,12 +181,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		tap_listener = new Listener();
 
 		/**
-		 * The metronome ticker
-		 */
-		ticker = new MetronomeTicker();
-		ticker.setOnTickListener(this);
-
-		/**
 		 * Initialize tempo
 		 */
 		setTempo(0);
@@ -180,13 +195,14 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		ticker.setTempo((tempo * 115 / 36) + 155);
 
 		// display tempo
-		tempo_view.setText("" + ticker.getTempoString());
+		tempo_view_string.setText("" + ticker.getTempoName());
+		tempo_view_int.setText("" + ticker.getTempo());
 
 		// update ticker speed
 		ticker.setTempo(ticker.getTempo());
-		
+
 		Message msg = new Message();
-		msg.obj = ticker.getTempoString();
+		msg.obj = ticker.getTempoName();
 		handler.sendMessage(msg);
 	}
 
@@ -244,10 +260,13 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		switch (v.getId()) {
 
 		case R.id.button_plus:
-			wheel.rotate(270);
+			vibrate();
+			wheel.rotate(Constants.RIGHT);
+
 			break;
 		case R.id.button_minus:
-			wheel.rotate(-270);
+			wheel.rotate(Constants.LEFT);
+			vibrate();
 			break;
 
 		}
@@ -291,9 +310,9 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void onTickTimeChanged(int time) {
 		animRight2Left.setDuration(time);
 		animLeft2Right.setDuration(time);
-		
+
 		Message msg = new Message();
-		msg.obj = ticker.getTempoString();
+		msg.obj = ticker.getTempoName();
 		handler.sendMessage(msg);
 	}
 
@@ -338,6 +357,10 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void onScrollValueChanged(Wheel view, float value, int roundValue) {
 		// SoundManager.playSound(1, 1);
 		setTempo(roundValue);
+	}
+
+	public void vibrate() {
+		handler.sendEmptyMessage(Constants.MSG_VIBRATE);
 	}
 
 }

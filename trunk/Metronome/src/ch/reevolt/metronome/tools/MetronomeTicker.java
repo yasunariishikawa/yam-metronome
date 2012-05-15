@@ -8,7 +8,6 @@ public class MetronomeTicker extends Ticker {
 			"Allegretto", "Allegro", "Presto", "Prestissimo" };
 
 	
-	
 	private int tempo_int = 60;
 	private int time = 1000;
 
@@ -21,6 +20,8 @@ public class MetronomeTicker extends Ticker {
 	}
 
 	public void setTempo(int tempo) {
+		
+		this.tempo_int = tempo;
 
 		int tempo_temp = tempo;
 
@@ -37,6 +38,9 @@ public class MetronomeTicker extends Ticker {
 
 		super.setTime(time);
 
+		/*
+		 * set the name of the selected tempo
+		 */
 		if (tempo < 60)
 			this.tempo_string = tempoString[0];
 		else if (tempo < 68)
@@ -65,7 +69,7 @@ public class MetronomeTicker extends Ticker {
 		return (int) (60 / ((float) ms / 1000));
 	}
 	
-	public String getTempoString(){
+	public String getTempoName(){
 		return this.tempo_string;
 	}
 	
