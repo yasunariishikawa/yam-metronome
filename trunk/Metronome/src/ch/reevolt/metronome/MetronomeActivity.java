@@ -286,9 +286,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	 * @see ch.reevolt.metronome.tools.Ticker.OnTickListener#onTickCanceled()
 	 */
 	public void onTickCanceled() {
-		// change time to restart anim
-		ticker.setTempo(-1);
-		// stop the cursor
 	}
 
 	/*

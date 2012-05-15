@@ -8,10 +8,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;;
 
-public class ButtonImageView extends ImageView implements OnClickListener {
+public class ButtonImageView extends ImageView implements OnClickListener, OnTouchListener {
 
 	private Timer timer;
 	private TimerTask timerTask;
@@ -27,7 +29,7 @@ public class ButtonImageView extends ImageView implements OnClickListener {
 	 */
 	public ButtonImageView(Context context) {
 		super(context);
-		initialize();
+		initialize();		
 	}
 
 	/**
@@ -59,6 +61,7 @@ public class ButtonImageView extends ImageView implements OnClickListener {
 		};
 
 		this.setOnClickListener(this);
+		this.setOnTouchListener(this);
 
 		timer = new Timer();
 
@@ -107,6 +110,22 @@ public class ButtonImageView extends ImageView implements OnClickListener {
 
 	public interface OnClickedListener {
 		public void onButtonClick(View v);
+	}
+
+	public boolean onTouch(View v, MotionEvent event) {
+		switch(event.getAction()){
+			case MotionEvent.ACTION_DOWN: 	actionOnPress();break;
+			case MotionEvent.ACTION_UP :	actionOnRelease();break;
+		}
+	
+		return false;
+	}
+	
+	public void actionOnPress(){
+		
+	}
+	public void actionOnRelease(){
+		
 	}
 
 }
