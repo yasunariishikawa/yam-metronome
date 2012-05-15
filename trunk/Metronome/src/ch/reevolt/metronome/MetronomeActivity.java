@@ -33,8 +33,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	// used to catch asynchronous tasks
 	private Handler handler;
 
-	private Handler vibratorHandler;
-
 	private MetronomeTicker ticker;
 
 	private State state = State.PAUSE;
@@ -167,6 +165,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		animRight2Left = new TranslateAnimation(parentWidth, 0, 0, 0);
 		animRight2Left.setInterpolator(new LinearInterpolator());
 		animRight2Left.setDuration(ticker.getTime());
+				
 
 		/**
 		 * Sound manager
@@ -197,13 +196,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		// display tempo
 		tempo_view_string.setText("" + ticker.getTempoName());
 		tempo_view_int.setText("" + ticker.getTempo());
-
-		// update ticker speed
-		ticker.setTempo(ticker.getTempo());
-
-		Message msg = new Message();
-		msg.obj = ticker.getTempoName();
-		handler.sendMessage(msg);
 	}
 
 	/*
@@ -260,13 +252,11 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		switch (v.getId()) {
 
 		case R.id.button_plus:
-			vibrate();
 			wheel.rotate(Constants.RIGHT);
 
 			break;
 		case R.id.button_minus:
 			wheel.rotate(Constants.LEFT);
-			vibrate();
 			break;
 
 		}
@@ -283,12 +273,11 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 
 		if (cursorPosition == Position.RIGHT) {
 			cursorPosition = Position.LEFT;
+			handler.sendEmptyMessage(Constants.LEFT);
 		} else {
 			cursorPosition = Position.RIGHT;
+			handler.sendEmptyMessage(Constants.RIGHT);
 		}
-
-		handler.sendEmptyMessage(0);
-
 	}
 
 	/*
@@ -310,10 +299,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void onTickTimeChanged(int time) {
 		animRight2Left.setDuration(time);
 		animLeft2Right.setDuration(time);
-
-		Message msg = new Message();
-		msg.obj = ticker.getTempoName();
-		handler.sendMessage(msg);
 	}
 
 	/*
@@ -357,10 +342,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void onScrollValueChanged(Wheel view, float value, int roundValue) {
 		// SoundManager.playSound(1, 1);
 		setTempo(roundValue);
-	}
-
-	public void vibrate() {
-		handler.sendEmptyMessage(Constants.MSG_VIBRATE);
 	}
 
 }
