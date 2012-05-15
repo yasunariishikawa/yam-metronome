@@ -10,7 +10,9 @@ import ch.reevolt.metronome.Constants.*;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +23,7 @@ import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,12 +60,13 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	ButtonImageView button_settings;
 
 	// cursor layout
+	FrameLayout layout_cursor_container;
 	ImageView cursor;
 	TranslateAnimation animLeft2Right;
 	TranslateAnimation animRight2Left;
 
 	// size of the parent of cursor
-	int parentWidth;
+	int parentWidth = 0;
 
 	// vibrator
 	Vibrator vibrator;
@@ -143,29 +147,14 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		/**
 		 * cursor layout
 		 */
-		cursor = (ImageView) findViewById(R.id.layout_cursor);
-		parentWidth = ((ImageView) findViewById(R.id.layout_cursor_mask))
-				.getMeasuredWidth();
+		layout_cursor_container = (FrameLayout) findViewById(R.id.layout_cursor_container);
+		cursor = (ImageView)findViewById(R.id.layout_cursor);
 
 		/**
 		 * The metronome ticker
 		 */
 		ticker = new MetronomeTicker();
 		ticker.setOnTickListener(this);
-
-		/**
-		 * Animations for cursor TODO get image width dynamically
-		 */
-		parentWidth = 600;
-
-		animLeft2Right = new TranslateAnimation(0, parentWidth, 0, 0);
-		animLeft2Right.setInterpolator(new LinearInterpolator());
-		animLeft2Right.setDuration(ticker.getTime());
-
-		animRight2Left = new TranslateAnimation(parentWidth, 0, 0, 0);
-		animRight2Left.setInterpolator(new LinearInterpolator());
-		animRight2Left.setDuration(ticker.getTime());
-				
 
 		/**
 		 * Sound manager
@@ -183,6 +172,19 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 * Initialize tempo
 		 */
 		setTempo(0);
+	}
+	
+	public void initializeAnimation(){
+		/**
+		 * Animations for cursor TODO get image width dynamically
+		 */
+		animLeft2Right = new TranslateAnimation(0, parentWidth, 0, 0);
+		animLeft2Right.setInterpolator(new LinearInterpolator());
+		animLeft2Right.setDuration(ticker.getTime());
+
+		animRight2Left = new TranslateAnimation(parentWidth, 0, 0, 0);
+		animRight2Left.setInterpolator(new LinearInterpolator());
+		animRight2Left.setDuration(ticker.getTime());
 	}
 
 	/*
@@ -209,6 +211,12 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		switch (v.getId()) {
 		case R.id.button_state:
 			if (state == State.PAUSE) {
+				// set layout parent width
+				if (parentWidth == 0){
+					parentWidth = layout_cursor_container.getWidth();
+					initializeAnimation();
+				}
+
 				// raplace play button by pause button
 				button_state.setImageDrawable(getResources().getDrawable(
 						R.drawable.pause));
