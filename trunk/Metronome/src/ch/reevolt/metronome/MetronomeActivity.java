@@ -2,6 +2,7 @@ package ch.reevolt.metronome;
 
 import ch.reevolt.metronome.graphic.ButtonImageView;
 import ch.reevolt.metronome.graphic.ButtonImageView.OnClickedListener;
+import ch.reevolt.metronome.graphic.CursorAnimation;
 import ch.reevolt.metronome.tools.Listener;
 import ch.reevolt.metronome.tools.MetronomeTicker;
 import ch.reevolt.metronome.tools.Ticker.OnTickListener;
@@ -38,7 +39,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 
 	private State state = State.PAUSE;
 
-	private int cursorPosition = Constants.LEFT;
 
 	// the wheel
 	Wheel wheel;
@@ -60,8 +60,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	// cursor layout
 	FrameLayout layout_cursor_container;
 	ImageView cursor;
-	TranslateAnimation animLeft2Right;
-	TranslateAnimation animRight2Left;
+	CursorAnimation animation;
 
 	// size of the parent of cursor
 	int parentWidth = 0;
@@ -101,10 +100,10 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 					vibrator.vibrate(10);
 					break;
 				case Constants.LEFT:
-					cursor.startAnimation(animLeft2Right);
+					cursor.startAnimation(animation);
 					break;
 				case Constants.RIGHT:
-					cursor.startAnimation(animRight2Left);
+					cursor.startAnimation(animation);
 					break;
 				}
 			}
@@ -176,13 +175,10 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		/**
 		 * Animations for cursor
 		 */
-		animLeft2Right = new TranslateAnimation(0, parentWidth, 0, 0);
-		animLeft2Right.setInterpolator(new LinearInterpolator());
-		animLeft2Right.setDuration(ticker.getTime());
+		animation = new CursorAnimation(0, parentWidth);
+		animation.setInterpolator(new LinearInterpolator());
+		animation.setDuration(ticker.getTime());
 
-		animRight2Left = new TranslateAnimation(parentWidth, 0, 0, 0);
-		animRight2Left.setInterpolator(new LinearInterpolator());
-		animRight2Left.setDuration(ticker.getTime());
 	}
 
 	/*
@@ -236,9 +232,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				state = State.PAUSE;
 				ticker.stop();
 
-				// replace cursor at the right emplacement
-				//cursorPosition = cursorPosition == Constants.LEFT ? Constants.RIGHT
-					//	: Constants.LEFT;
 
 			}
 			break;
@@ -277,18 +270,9 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		// start sound
 		// ....
 		
-		cursorPosition = cursorPosition == Constants.LEFT ? Constants.RIGHT
-				: Constants.LEFT;
+		animation.changeDirection();
 		
 		handler.sendEmptyMessage(cursorPosition);
-
-		/*if (cursorPosition == Constants.RIGHT) {
-			cursorPosition = Constants.LEFT;
-			handler.sendEmptyMessage(Constants.LEFT);
-		} else {
-			cursorPosition = Constants.RIGHT;
-			handler.sendEmptyMessage(Constants.RIGHT);
-		}*/
 	}
 
 	/*
@@ -306,7 +290,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	 */
 	public void onTickTimeChanged(int time) {
 		animRight2Left.setDuration(time);
-		animLeft2Right.setDuration(time);
+		animation.setDuration(time);
 	}
 
 	/*
