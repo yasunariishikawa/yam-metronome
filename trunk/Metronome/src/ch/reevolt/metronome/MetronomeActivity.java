@@ -4,6 +4,8 @@ import ch.reevolt.metronome.graphic.ButtonImageView;
 import ch.reevolt.metronome.graphic.ButtonImageView.OnClickedListener;
 import ch.reevolt.metronome.tools.Listener;
 import ch.reevolt.metronome.tools.MetronomeTicker;
+import ch.reevolt.metronome.tools.MetronomeTicker.Note;
+import ch.reevolt.metronome.tools.MetronomeTicker.OnMetronomeTickListener;
 import ch.reevolt.metronome.tools.Ticker.OnTickListener;
 import ch.reevolt.sound.SoundManager;
 import ch.reevolt.metronome.Constants.*;
@@ -29,7 +31,7 @@ import it.sephiroth.android.wheel.view.Wheel;
 import it.sephiroth.android.wheel.view.Wheel.OnScrollListener;
 
 public class MetronomeActivity extends Activity implements OnScrollListener,
-		OnClickedListener, OnClickListener, OnTickListener {
+		OnClickedListener, OnClickListener, OnMetronomeTickListener {
 
 	// used to catch asynchronous tasks
 	private Handler handler;
@@ -120,8 +122,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 * Tempo visualizer
 		 */
 		tempo_view_int = (TextView) findViewById(R.id.tempo_int);
-		Typeface tf = Typeface
-				.createFromAsset(getAssets(), "fonts/digital.ttf");
+		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digital.ttf");
 		tempo_view_int.setTypeface(tf);
 
 		tempo_view_string = (TextView) findViewById(R.id.tempo_txt);
@@ -152,7 +153,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 * The metronome ticker
 		 */
 		ticker = new MetronomeTicker();
-		ticker.setOnTickListener(this);
+		ticker.setOnMetronomeTickListener(this);
 
 		/**
 		 * Sound manager
@@ -237,8 +238,8 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				ticker.stop();
 
 				// replace cursor at the right emplacement
-				//cursorPosition = cursorPosition == Constants.LEFT ? Constants.RIGHT
-					//	: Constants.LEFT;
+				// cursorPosition = cursorPosition == Constants.LEFT ? Constants.RIGHT
+				// : Constants.LEFT;
 
 			}
 			break;
@@ -271,49 +272,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see ch.reevolt.metronome.tools.Ticker.OnTickListener#onTick(int)
-	 */
-	public void onTick(int time) {
-		// start sound
-		// ....
-		
-		cursorPosition = cursorPosition == Constants.LEFT ? Constants.RIGHT
-				: Constants.LEFT;
-		
-		handler.sendEmptyMessage(cursorPosition);
-
-		/*if (cursorPosition == Constants.RIGHT) {
-			cursorPosition = Constants.LEFT;
-			handler.sendEmptyMessage(Constants.LEFT);
-		} else {
-			cursorPosition = Constants.RIGHT;
-			handler.sendEmptyMessage(Constants.RIGHT);
-		}*/
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.reevolt.metronome.tools.Ticker.OnTickListener#onTickCanceled()
-	 */
-	public void onTickCanceled() {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.reevolt.metronome.tools.Ticker.OnTickListener#onTickTimeChanged()
-	 */
-	public void onTickTimeChanged(int time) {
-		animRight2Left.setDuration(time);
-		animLeft2Right.setDuration(time);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * it.sephiroth.android.wheel.view.Wheel.OnScrollListener#onScrollStarted
+	 * @see it.sephiroth.android.wheel.view.Wheel.OnScrollListener#onScrollStarted
 	 * (it.sephiroth.android.wheel.view.Wheel, float, int)
 	 */
 	public void onScrollStarted(Wheel view, float value, int roundValue) {
@@ -350,6 +309,48 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void onScrollValueChanged(Wheel view, float value, int roundValue) {
 		// SoundManager.playSound(1, 1);
 		setTempo(roundValue);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * ch.reevolt.metronome.tools.MetronomeTicker.OnMetronomeTickListener#onTick
+	 * (ch.reevolt.metronome.tools.MetronomeTicker.Note)
+	 */
+	public void onTick(Note note) {
+		// start sound
+		if (note == Note.HIGH)
+			SoundManager.playSound(0, 0);
+		else
+			SoundManager.playSound(1, 0);
+
+		cursorPosition = cursorPosition == Constants.LEFT ? Constants.RIGHT
+				: Constants.LEFT;
+
+		handler.sendEmptyMessage(cursorPosition);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ch.reevolt.metronome.tools.MetronomeTicker.OnMetronomeTickListener#
+	 * onTickChanged(int)
+	 */
+	public void onTickChanged(int time) {
+		animRight2Left.setDuration(time);
+		animLeft2Right.setDuration(time);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see ch.reevolt.metronome.tools.MetronomeTicker.OnMetronomeTickListener#
+	 * onTickCanceled()
+	 */
+	public void onTickCanceled() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

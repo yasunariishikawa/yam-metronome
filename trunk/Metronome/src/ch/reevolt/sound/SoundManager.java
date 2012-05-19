@@ -64,7 +64,11 @@ public class SoundManager {
 	 */
 	public static void loadSounds()
 	{
-		mSoundPoolMap.put(0, mSoundPool.load(mContext, R.raw.tick, 1));		
+		mSoundPoolMap.put(0, mSoundPool.load(mContext, R.raw.ping, 1));
+		mSoundPoolMap.put(1, mSoundPool.load(mContext, R.raw.ping_down, 1));	
+		mSoundPoolMap.put(2, mSoundPool.load(mContext, R.raw.tick, 1));	
+		mSoundPoolMap.put(3, mSoundPool.load(mContext, R.raw.tick_down, 1));	
+		
 	}
 	
 	/**
