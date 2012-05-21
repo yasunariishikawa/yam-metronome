@@ -48,8 +48,20 @@
     <LinearLayout
     	android:layout_width="fill_parent"
 		android:layout_height="0dp"
-		android:layout_weight="11"
-    ></LinearLayout>
+		android:layout_weight="11">
+		
+		 <kankan.wheel.widget.WheelView android:id="@+id/day"
+            android:layout_height="80dp"
+            android:layout_width="35dp"
+            android:layout_gravity="center_vertical|center_horizontal"/>
+         
+		<kankan.wheel.widget.WheelView android:id="@+id/day"
+            android:layout_height="80dp"
+            android:layout_width="35dp"
+            android:layout_gravity="center_vertical|center_horizontal"/>
+ 
+    
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/middle"
@@ -59,6 +71,7 @@
         android:weightSum="3" 
         android:layout_weight="1"
         android:layout_height="68dp">
+
 
 
 				<LinearLayout
