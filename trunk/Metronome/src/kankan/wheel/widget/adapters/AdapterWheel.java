@@ -48,7 +48,6 @@ public class AdapterWheel extends AbstractWheelTextAdapter {
         return adapter;
     }
     
-    @Override
     public int getItemsCount() {
         return adapter.getItemsCount();
     }

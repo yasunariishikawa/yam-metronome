@@ -78,7 +78,6 @@ public class NumericWheelAdapter extends AbstractWheelTextAdapter {
         return null;
     }
 
-    @Override
     public int getItemsCount() {
         return maxValue - minValue + 1;
     }    
