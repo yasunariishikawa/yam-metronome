@@ -14,8 +14,8 @@ public class MetronomeTicker extends Ticker implements Ticker.OnTickListener {
 	private int tempo_int = 60;
 	private int time = 1000;
 
-	int currentTickInMeasure = 0;
-	int timePerMeasure = 4;
+	public int currentTickInMeasure = 0;
+	public int timePerMeasure = 4;
 
 	// Tempo mesuration = Tempo.BINARY;
 	// Length note = Length.CROTCHET;

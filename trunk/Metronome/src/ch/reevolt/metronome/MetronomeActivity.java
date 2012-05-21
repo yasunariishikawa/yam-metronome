@@ -1,5 +1,7 @@
 package ch.reevolt.metronome;
 
+import kankan.wheel.widget.OnWheelChangedListener;
+import kankan.wheel.widget.WheelView;
 import ch.reevolt.metronome.graphic.ButtonImageView;
 import ch.reevolt.metronome.graphic.ButtonImageView.OnClickedListener;
 import ch.reevolt.metronome.tools.Listener;
@@ -25,13 +27,15 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import it.sephiroth.android.wheel.view.Wheel;
 import it.sephiroth.android.wheel.view.Wheel.OnScrollListener;
 
 public class MetronomeActivity extends Activity implements OnScrollListener,
-		OnClickedListener, OnClickListener, OnMetronomeTickListener {
+		OnClickedListener, OnClickListener, OnMetronomeTickListener,
+		OnWheelChangedListener {
 
 	// used to catch asynchronous tasks
 	private Handler handler;
@@ -122,7 +126,8 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 * Tempo visualizer
 		 */
 		tempo_view_int = (TextView) findViewById(R.id.tempo_int);
-		Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/digital.ttf");
+		Typeface tf = Typeface
+				.createFromAsset(getAssets(), "fonts/digital.ttf");
 		tempo_view_int.setTypeface(tf);
 
 		tempo_view_string = (TextView) findViewById(R.id.tempo_txt);
@@ -171,6 +176,13 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 * Initialize tempo
 		 */
 		setTempo(0);
+
+		WheelView measure_up = (WheelView) findViewById(R.id.measure_up);
+		WheelView measure_down = (WheelView) findViewById(R.id.measure_down);
+
+		measure_up.addChangingListener(this);
+		measure_down.addChangingListener(this);
+
 	}
 
 	public void initializeAnimation() {
@@ -238,7 +250,8 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				ticker.stop();
 
 				// replace cursor at the right emplacement
-				// cursorPosition = cursorPosition == Constants.LEFT ? Constants.RIGHT
+				// cursorPosition = cursorPosition == Constants.LEFT ?
+				// Constants.RIGHT
 				// : Constants.LEFT;
 
 			}
@@ -272,7 +285,8 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see it.sephiroth.android.wheel.view.Wheel.OnScrollListener#onScrollStarted
+	 * @see
+	 * it.sephiroth.android.wheel.view.Wheel.OnScrollListener#onScrollStarted
 	 * (it.sephiroth.android.wheel.view.Wheel, float, int)
 	 */
 	public void onScrollStarted(Wheel view, float value, int roundValue) {
@@ -351,6 +365,30 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void onTickCanceled() {
 		// TODO Auto-generated method stub
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * kankan.wheel.widget.OnWheelChangedListener#onChanged(kankan.wheel.widget
+	 * .WheelView, int, int)
+	 */
+	public void onChanged(WheelView wheel, int oldValue, int newValue) {
+		switch (wheel.getId()) {
+		case R.id.measure_up:
+			
+			ticker.timePerMeasure = newValue;
+			
+			break;
+			
+			
+		case R.id.measure_down:
+			
+			ticker.
+			
+			break;
+		}
 	}
 
 }
