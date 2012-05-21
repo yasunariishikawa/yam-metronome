@@ -25,7 +25,7 @@ public class MetronomeTicker extends Ticker implements Ticker.OnTickListener {
 	OnMetronomeTickListener listener;
 
 	public MetronomeTicker() {
-		super();
+		super(true);
 		super.setOnTickListener(this);
 	}
 
@@ -102,12 +102,13 @@ public class MetronomeTicker extends Ticker implements Ticker.OnTickListener {
 	public void onTickTimeChanged(int time) {
 		currentTickInMeasure = 0;
 		listener.onTickChanged(time);
-
 	}
 
 	public void onTickCanceled() {
 		listener.onTickCanceled();
-
+	}
+	
+	public void onTickReloaded() {
 	}
 
 	/*
@@ -124,5 +125,7 @@ public class MetronomeTicker extends Ticker implements Ticker.OnTickListener {
 	public void setOnMetronomeTickListener(OnMetronomeTickListener listener) {
 		this.listener = listener;
 	}
+
+
 
 }

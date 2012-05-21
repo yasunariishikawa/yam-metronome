@@ -8,7 +8,6 @@ import ch.reevolt.metronome.tools.Listener;
 import ch.reevolt.metronome.tools.MetronomeTicker;
 import ch.reevolt.metronome.tools.MetronomeTicker.Note;
 import ch.reevolt.metronome.tools.MetronomeTicker.OnMetronomeTickListener;
-import ch.reevolt.metronome.tools.Ticker.OnTickListener;
 import ch.reevolt.sound.SoundManager;
 import ch.reevolt.metronome.Constants.*;
 
@@ -27,7 +26,6 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import it.sephiroth.android.wheel.view.Wheel;
@@ -175,7 +173,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		/**
 		 * Initialize tempo
 		 */
-		setTempo(0);
+		setTempo(125);
 
 		WheelView measure_up = (WheelView) findViewById(R.id.measure_up);
 		WheelView measure_down = (WheelView) findViewById(R.id.measure_down);
@@ -204,7 +202,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void setTempo(int tempo) {
 
 		// increment or decrement tempo
-		ticker.setTempo((tempo * 115 / 36) + 155);
+		ticker.setTempo(tempo);
 
 		// display tempo
 		tempo_view_string.setText("" + ticker.getTempoName());
@@ -238,6 +236,10 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				// disable autotempo button
 				button_micro.setEnable(true);
 
+				cursorPosition = Constants.LEFT;
+
+				cursor.setVisibility(ImageView.VISIBLE);
+
 				// run ticker
 				ticker.start();
 
@@ -248,16 +250,13 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				button_micro.setEnable(false);
 				state = State.PAUSE;
 				ticker.stop();
-
-				// replace cursor at the right emplacement
-				// cursorPosition = cursorPosition == Constants.LEFT ?
-				// Constants.RIGHT
-				// : Constants.LEFT;
-
+				cursor.setVisibility(ImageView.INVISIBLE);
 			}
 			break;
 		case R.id.button_micro:
-			setTempo((MetronomeTicker.toBPM(tap_listener.tick()) - 155) * 36 / 115);
+			int time = tap_listener.tick();
+			if (time != -1)
+				setTempo(MetronomeTicker.toBPM(time));
 			break;
 		}
 
@@ -310,7 +309,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	 * (it.sephiroth.android.wheel.view.Wheel, float, int)
 	 */
 	public void onScrollFinished(Wheel view, float value, int roundValue) {
-		setTempo(roundValue);
+		setTempo(roundValue * 85 / 36 + 125);
 	}
 
 	/*
@@ -322,7 +321,8 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	 */
 	public void onScrollValueChanged(Wheel view, float value, int roundValue) {
 		// SoundManager.playSound(1, 1);
-		setTempo(roundValue);
+		setTempo(roundValue * 85 / 36 + 125);
+
 	}
 
 	/*
@@ -363,7 +363,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	 * onTickCanceled()
 	 */
 	public void onTickCanceled() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -377,16 +376,13 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	public void onChanged(WheelView wheel, int oldValue, int newValue) {
 		switch (wheel.getId()) {
 		case R.id.measure_up:
-			
+
 			ticker.timePerMeasure = newValue;
-			
+
 			break;
-			
-			
+
 		case R.id.measure_down:
-			
-			ticker.
-			
+
 			break;
 		}
 	}
