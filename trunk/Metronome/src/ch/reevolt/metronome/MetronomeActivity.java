@@ -1,9 +1,17 @@
 package ch.reevolt.metronome;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+import beatit.BPM2SampleProcessor;
+import beatit.EnergyOutputAudioDevice;
 import kankan.wheel.widget.OnWheelChangedListener;
 import kankan.wheel.widget.WheelView;
 import ch.reevolt.metronome.graphic.ButtonImageView;
 import ch.reevolt.metronome.graphic.ButtonImageView.OnClickedListener;
+import ch.reevolt.metronome.graphic.ImageViewAdapater;
 import ch.reevolt.metronome.tools.Listener;
 import ch.reevolt.metronome.tools.MetronomeTicker;
 import ch.reevolt.metronome.tools.MetronomeTicker.Note;
@@ -18,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -44,8 +53,11 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 
 	private int cursorPosition = Constants.LEFT;
 
-	// the wheel
+	// the tempo wheel
 	Wheel wheel;
+	
+	// the meter wheel
+	WheelView wheel_meter;
 
 	//
 	TextView tempo_view_int;
@@ -169,17 +181,27 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 * The tempo listener
 		 */
 		tap_listener = new Listener();
-
+		
+		/**
+		 * Initialize the meter wheel
+		 */
+		wheel_meter = (WheelView)findViewById(R.id.wheel_meter);
+		
+		wheel_meter.setViewAdapter(new ImageViewAdapater(this));
+		wheel_meter.setCurrentItem((int)(Math.random() * 10));
+		wheel_meter.setVisibleItems(3);
+		wheel_meter.measure(wheel_meter.getWidth(), wheel_meter.getHeight());
+		wheel_meter.addChangingListener(this);
+		//wheel_meter.addScrollingListener(scrolledListener);
+		wheel_meter.setCyclic(true);
+		wheel_meter.setEnabled(true);      
+	
 		/**
 		 * Initialize tempo
 		 */
 		setTempo(125);
 
-		WheelView measure_up = (WheelView) findViewById(R.id.measure_up);
-		WheelView measure_down = (WheelView) findViewById(R.id.measure_down);
 
-		measure_up.addChangingListener(this);
-		measure_down.addChangingListener(this);
 
 	}
 
@@ -254,9 +276,11 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 			}
 			break;
 		case R.id.button_micro:
+
 			int time = tap_listener.tick();
 			if (time != -1)
 				setTempo(MetronomeTicker.toBPM(time));
+
 			break;
 		}
 
@@ -375,15 +399,13 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	 */
 	public void onChanged(WheelView wheel, int oldValue, int newValue) {
 		switch (wheel.getId()) {
-		case R.id.measure_up:
+		case 0 : ;
 
 			ticker.timePerMeasure = newValue;
 
 			break;
 
-		case R.id.measure_down:
 
-			break;
 		}
 	}
 

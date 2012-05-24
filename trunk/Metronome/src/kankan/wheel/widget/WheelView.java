@@ -50,7 +50,7 @@ public class WheelView extends View {
 			0x00AAAAAA, 0x00AAAAAA };
 
 	/** Top and bottom items offset (to hide that) */
-	private static final int ITEM_OFFSET_PERCENT = 10;
+	private static final int ITEM_OFFSET_PERCENT = 50;
 
 	/** Left and right padding value */
 	private static final int PADDING = 10;
@@ -482,7 +482,6 @@ public class WheelView extends View {
 	private int calculateLayoutWidth(int widthSize, int mode) {
 		initResourcesIfNecessary();
 
-		// TODO: make it static
 		itemsLayout.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 	    itemsLayout.measure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.UNSPECIFIED), 
 	                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
@@ -556,7 +555,7 @@ public class WheelView extends View {
 	        updateView();
 
 	        drawItems(canvas);
-	        drawCenterRect(canvas);
+	        //drawCenterRect(canvas);
 		}
 		
         drawShadows(canvas);

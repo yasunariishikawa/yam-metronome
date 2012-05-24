@@ -28,40 +28,129 @@
 		
 					<ImageView
 						android:id="@+id/layout_cursor"
-						android:layout_height="60dp"
-						android:paddingTop="10dp"
+						android:layout_height="fill_parent"
+						android:layout_marginTop="5dp"
+						android:layout_marginBottom="5dp"
 						android:background="#FFF47D26" 
 						android:layout_width="10dp">
 					</ImageView>
 					
 					<ImageView
 						android:id="@+id/layout_cursor_mask"
-						android:layout_height="wrap_content"
-						android:src="@drawable/plaque" 
-						android:layout_gravity="top"
-						android:layout_width="wrap_content">
+						android:layout_height="fill_parent"
+						android:layout_width="fill_parent"
+						android:background="@drawable/rectangle"
+						android:layout_gravity="top">
 					</ImageView>
 		
 		        </FrameLayout>
     </LinearLayout>
     
+  
     <LinearLayout
     	android:layout_width="fill_parent"
 		android:layout_height="0dp"
-		android:layout_weight="11">
+		android:layout_weight="11"
+		android:padding="5dp"
+		android:orientation="horizontal">
 		
-		 <kankan.wheel.widget.WheelView android:id="@+id/measure_up"
-            android:layout_height="80dp"
-            android:layout_width="35dp"
+		 <kankan.wheel.widget.WheelView android:id="@+id/wheel_meter"
+            android:layout_height="fill_parent"
+            android:layout_width="70dp"
+            android:layout_margin="20dp"
             android:layout_gravity="center_vertical|center_horizontal"/>
          
-		<kankan.wheel.widget.WheelView android:id="@+id/measure_down"
-            android:layout_height="80dp"
-            android:layout_width="35dp"
-            android:layout_gravity="center_vertical|center_horizontal"/>
- 
-    
+         <LinearLayout
+         	android:layout_width="fill_parent"
+         	android:layout_height="fill_parent"
+         	android:orientation="vertical">
+         	
+         	<LinearLayout
+         		android:layout_width="fill_parent"
+         		android:layout_height="0dp"
+         		android:layout_weight="1">
+         		
+         			<TextView
+         				android:layout_height="fill_parent"
+         				android:layout_width="50dp"
+         				android:text="meter"
+         				android:gravity="left|center_vertical"
+         				android:textSize="15dp"
+         				android:textColor="#000000"/>
+         				
+       				<ch.reevolt.metronome.graphic.ButtonImageView
+       					android:id="@+id/button_first_note"
+       					android:src="@drawable/note"
+       					android:layout_height="fill_parent"
+       					android:layout_width="30dp"
+       					android:paddingLeft="10dp"
+       					android:paddingRight="10dp"
+       				/>
+       				
+       				<ch.reevolt.metronome.graphic.ButtonImageView
+       					android:id="@+id/button_second_note"
+       					android:src="@drawable/note"
+       					android:layout_height="fill_parent"
+       					android:layout_width="30dp"
+       					android:paddingLeft="10dp"
+       					android:paddingRight="10dp"
+       				/>
+       				
+       				<ch.reevolt.metronome.graphic.ButtonImageView
+       					android:id="@+id/button_third_note"
+       					android:src="@drawable/note"
+       					android:layout_height="fill_parent"
+       					android:layout_width="30dp"
+       					android:paddingLeft="10dp"
+       					android:paddingRight="10dp"
+       				/>
+       				
+       				<ch.reevolt.metronome.graphic.ButtonImageView
+       					android:id="@+id/button_fourth_note"
+       					android:src="@drawable/note"
+       					android:layout_height="fill_parent"
+       					android:layout_width="30dp"
+       					android:paddingLeft="10dp"
+       					android:paddingRight="10dp"
+       				/>
+       				
+       			
+         		
+         	</LinearLayout>
+
+         
+          <ImageView 
+	            android:layout_height="1dp"
+	            android:layout_width="fill_parent"
+	            android:layout_gravity="top"
+	            android:src="@drawable/separator_1"/>
+	            
+               	<LinearLayout
+	         		android:layout_width="fill_parent"
+	         		android:layout_height="0dp"
+	         		android:layout_weight="1">
+	         	</LinearLayout>
+         
+          <ImageView 
+	            android:layout_height="1dp"
+	            android:layout_width="fill_parent"
+	            android:layout_gravity="top"
+	            android:src="@drawable/separator_1"/>
+	            
+	           	<LinearLayout
+	         		android:layout_width="fill_parent"
+	         		android:layout_height="0dp"
+	         		android:layout_weight="1">
+	         	</LinearLayout>
+          
+         </LinearLayout>
+           
     </LinearLayout>
+    
+   <ImageView
+    android:layout_height="1dp"
+    android:layout_width="fill_parent"
+    android:src="@drawable/separator_1"/>
 
     <LinearLayout
         android:id="@+id/middle"
