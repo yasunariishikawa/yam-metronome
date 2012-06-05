@@ -72,6 +72,12 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	ButtonImageView button_state;
 	ButtonImageView button_micro;
 	ButtonImageView button_settings;
+	
+	// note button
+	ButtonImageView button_note1;
+	ButtonImageView button_note2;
+	ButtonImageView button_note3;
+	ButtonImageView button_note4;
 
 	// cursor layout
 	FrameLayout layout_cursor_container;
@@ -157,6 +163,18 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		button_minus.setOnClickListener(this);
 		button_micro = (ButtonImageView) findViewById(R.id.button_micro);
 		button_micro.setOnClickedListener(this);
+		
+		/**
+		 * set note button
+		 */
+		button_note1 = (ButtonImageView)findViewById(R.id.button_first_note);
+		button_note1.setOnClickedListener(this);
+		button_note2 = (ButtonImageView)findViewById(R.id.button_second_note);
+		button_note2.setOnClickedListener(this);
+		button_note3 = (ButtonImageView)findViewById(R.id.button_third_note);
+		button_note3.setOnClickedListener(this);
+		button_note4 = (ButtonImageView)findViewById(R.id.button_fourth_note);
+		button_note4.setOnClickedListener(this);
 
 		/**
 		 * cursor layout
@@ -185,7 +203,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		/**
 		 * Initialize the meter wheel
 		 */
-		wheel_meter = (WheelView)findViewById(R.id.wheel_meter);
+	/*	wheel_meter = (WheelView)findViewById(R.id.wheel_meter);
 		
 		wheel_meter.setViewAdapter(new ImageViewAdapater(this));
 		wheel_meter.setCurrentItem((int)(Math.random() * 10));
@@ -194,7 +212,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		wheel_meter.addChangingListener(this);
 		//wheel_meter.addScrollingListener(scrolledListener);
 		wheel_meter.setCyclic(true);
-		wheel_meter.setEnabled(true);      
+		wheel_meter.setEnabled(true);      */
 	
 		/**
 		 * Initialize tempo
@@ -256,7 +274,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				state = State.PLAY;
 
 				// disable autotempo button
-				button_micro.setEnable(true);
+				button_micro.setEnable(false);
 
 				cursorPosition = Constants.LEFT;
 
@@ -269,21 +287,37 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				button_state.setImageDrawable(getResources().getDrawable(
 						R.drawable.play));
 				// stop ticker
-				button_micro.setEnable(false);
+				button_micro.setEnable(true);
 				state = State.PAUSE;
 				ticker.stop();
 				cursor.setVisibility(ImageView.INVISIBLE);
 			}
 			break;
+			
 		case R.id.button_micro:
 
 			int time = tap_listener.tick();
 			if (time != -1)
 				setTempo(MetronomeTicker.toBPM(time));
-
 			break;
+			
+		case R.id.button_first_note:
+			button_note1.setVisible(!button_note1.isVisible());
+			break;
+			
+		case R.id.button_second_note:
+			button_note2.setVisible(!button_note2.isVisible());
+			break;
+			
+		case R.id.button_third_note:
+			button_note3.setVisible(!button_note3.isVisible());
+			break;
+			
+		case R.id.button_fourth_note:
+			button_note4.setVisible(!button_note4.isVisible());
+			break;
+			
 		}
-
 	}
 
 	/*

@@ -21,6 +21,7 @@ public class ButtonImageView extends ImageView implements OnClickListener, OnTou
 	public int aplha;
 	boolean isRunning = false;
 	boolean enable = true;
+	boolean visible = true;
 
 	OnClickedListener listener;
 
@@ -90,12 +91,26 @@ public class ButtonImageView extends ImageView implements OnClickListener, OnTou
 	}
 
 	public void setEnable(boolean enable) {
-		if (enable) {
+		if (!enable) {
 			this.setAlpha(96);
 			this.enable = false;
 		} else {
 			this.setAlpha(255);
 			this.enable = true;
+		}
+	}
+	
+	public boolean isVisible(){
+		return visible;
+	}
+	
+	public void setVisible(boolean visible){
+		if (!visible) {
+			this.setAlpha(96);
+			this.visible = false;
+		} else {
+			this.setAlpha(255);
+			this.visible = true;
 		}
 	}
 
