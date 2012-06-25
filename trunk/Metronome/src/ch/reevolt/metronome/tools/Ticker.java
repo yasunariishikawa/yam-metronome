@@ -6,7 +6,7 @@ import java.util.TimerTask;
 /**
  * 
  * A dynamic Timer inheriting of Java.util.Timer. It's able to
- * start/stop/reload, change the tick time during clicking synchronously or
+ * start/stop/reload time, change the tick time during clicking synchronously or
  * asynchronously. It's including a OnTickListener interface to callback.
  * 
  * @author Romain Cherix
