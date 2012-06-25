@@ -11,9 +11,19 @@ import android.widget.ImageView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;;
+import android.view.View.OnTouchListener;
 
-public class ButtonImageView extends ImageView implements OnClickListener, OnTouchListener {
+;
+
+/**
+ * 
+ * @author Romain Cherix
+ * 
+ *         this class allows to use ImageView like a Button.
+ * 
+ */
+public class ButtonImageView extends ImageView implements OnClickListener,
+		OnTouchListener {
 
 	private Timer timer;
 	private TimerTask timerTask;
@@ -30,7 +40,7 @@ public class ButtonImageView extends ImageView implements OnClickListener, OnTou
 	 */
 	public ButtonImageView(Context context) {
 		super(context);
-		initialize();		
+		initialize();
 	}
 
 	/**
@@ -52,6 +62,9 @@ public class ButtonImageView extends ImageView implements OnClickListener, OnTou
 		initialize();
 	}
 
+	/**
+	 * initialize the button
+	 */
 	public void initialize() {
 
 		buttonHandler = new Handler() {
@@ -68,6 +81,9 @@ public class ButtonImageView extends ImageView implements OnClickListener, OnTou
 
 	}
 
+	/**
+	 * Action on click
+	 */
 	public void onClick(View v) {
 
 		if (enable) {
@@ -90,6 +106,10 @@ public class ButtonImageView extends ImageView implements OnClickListener, OnTou
 
 	}
 
+	/**
+	 * @param enable
+	 *          state of the button
+	 */
 	public void setEnable(boolean enable) {
 		if (!enable) {
 			this.setAlpha(96);
@@ -99,12 +119,19 @@ public class ButtonImageView extends ImageView implements OnClickListener, OnTou
 			this.enable = true;
 		}
 	}
-	
-	public boolean isVisible(){
+
+	/**
+	 * @return the visibility of the button
+	 */
+	public boolean isVisible() {
 		return visible;
 	}
-	
-	public void setVisible(boolean visible){
+
+	/**
+	 * @param visible
+	 *          the visibility of the button
+	 */
+	public void setVisible(boolean visible) {
 		if (!visible) {
 			this.setAlpha(96);
 			this.visible = false;
@@ -118,6 +145,7 @@ public class ButtonImageView extends ImageView implements OnClickListener, OnTou
 	 * Interface with listener
 	 * 
 	 * @param listener
+	 *          listener to callback
 	 */
 	public void setOnClickedListener(OnClickedListener listener) {
 		this.listener = listener;
@@ -128,19 +156,30 @@ public class ButtonImageView extends ImageView implements OnClickListener, OnTou
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {
-		switch(event.getAction()){
-			case MotionEvent.ACTION_DOWN: 	actionOnPress();break;
-			case MotionEvent.ACTION_UP :	actionOnRelease();break;
+		switch (event.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			actionOnPress();
+			break;
+		case MotionEvent.ACTION_UP:
+			actionOnRelease();
+			break;
 		}
-	
+
 		return false;
 	}
-	
-	public void actionOnPress(){
-		
+
+	/**
+	 * method to override in order to modify behavior on action performed
+	 */
+	public void actionOnPress() {
+
 	}
-	public void actionOnRelease(){
-		
+
+	/**
+	 * method to override in order to modify behavior on action performed
+	 */
+	public void actionOnRelease() {
+
 	}
 
 }

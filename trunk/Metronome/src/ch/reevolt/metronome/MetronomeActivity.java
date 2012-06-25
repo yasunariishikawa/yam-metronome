@@ -1,17 +1,10 @@
 package ch.reevolt.metronome;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import beatit.BPM2SampleProcessor;
-import beatit.EnergyOutputAudioDevice;
 import kankan.wheel.widget.OnWheelChangedListener;
 import kankan.wheel.widget.WheelView;
 import ch.reevolt.metronome.graphic.ButtonImageView;
 import ch.reevolt.metronome.graphic.ButtonImageView.OnClickedListener;
-import ch.reevolt.metronome.graphic.ImageViewAdapater;
 import ch.reevolt.metronome.tools.Listener;
 import ch.reevolt.metronome.tools.MetronomeTicker;
 import ch.reevolt.metronome.tools.MetronomeTicker.Note;
@@ -26,7 +19,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
