@@ -1,15 +1,23 @@
 package ch.reevolt.metronome;
 
+<<<<<<< .mine
+=======
 
+>>>>>>> .r35
 import kankan.wheel.widget.OnWheelChangedListener;
 import kankan.wheel.widget.WheelView;
+<<<<<<< .mine
+import ch.reevolt.android.graphics.widget.ButtonImageView;
+import ch.reevolt.android.graphics.widget.ButtonImageView.OnClickedListener;
+import ch.reevolt.android.sound.SoundManager;
+=======
 import ch.reevolt.metronome.graphic.ButtonImageView;
 import ch.reevolt.metronome.graphic.ButtonImageView.OnClickedListener;
+>>>>>>> .r35
 import ch.reevolt.metronome.tools.Listener;
 import ch.reevolt.metronome.tools.MetronomeTicker;
 import ch.reevolt.metronome.tools.MetronomeTicker.Note;
 import ch.reevolt.metronome.tools.MetronomeTicker.OnMetronomeTickListener;
-import ch.reevolt.sound.SoundManager;
 import ch.reevolt.metronome.Constants.*;
 
 import android.app.Activity;
@@ -47,7 +55,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 
 	// the tempo wheel
 	Wheel wheel;
-	
+
 	// the meter wheel
 	WheelView wheel_meter;
 
@@ -64,7 +72,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	ButtonImageView button_state;
 	ButtonImageView button_micro;
 	ButtonImageView button_settings;
-	
+
 	// note button
 	ButtonImageView button_note1;
 	ButtonImageView button_note2;
@@ -120,6 +128,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				case Constants.RIGHT:
 					cursor.startAnimation(animRight2Left);
 					break;
+				default:
 				}
 			}
 		};
@@ -155,17 +164,18 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		button_minus.setOnClickListener(this);
 		button_micro = (ButtonImageView) findViewById(R.id.button_micro);
 		button_micro.setOnClickedListener(this);
-		
+		button_micro.setBehavior(ButtonImageView.Behavior.PUSH);
+
 		/**
 		 * set note button
 		 */
-		button_note1 = (ButtonImageView)findViewById(R.id.button_first_note);
+		button_note1 = (ButtonImageView) findViewById(R.id.button_first_note);
 		button_note1.setOnClickedListener(this);
-		button_note2 = (ButtonImageView)findViewById(R.id.button_second_note);
+		button_note2 = (ButtonImageView) findViewById(R.id.button_second_note);
 		button_note2.setOnClickedListener(this);
-		button_note3 = (ButtonImageView)findViewById(R.id.button_third_note);
+		button_note3 = (ButtonImageView) findViewById(R.id.button_third_note);
 		button_note3.setOnClickedListener(this);
-		button_note4 = (ButtonImageView)findViewById(R.id.button_fourth_note);
+		button_note4 = (ButtonImageView) findViewById(R.id.button_fourth_note);
 		button_note4.setOnClickedListener(this);
 
 		/**
@@ -185,34 +195,18 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 */
 		SoundManager.getInstance();
 		SoundManager.initSounds(this);
-		SoundManager.loadSounds();
+		SoundManager.addSound(0, R.raw.tick_down);
+		SoundManager.addSound(0, R.raw.tick);
 
 		/**
 		 * The tempo listener
 		 */
 		tap_listener = new Listener();
-		
-		/**
-		 * Initialize the meter wheel
-		 */
-	/*	wheel_meter = (WheelView)findViewById(R.id.wheel_meter);
-		
-		wheel_meter.setViewAdapter(new ImageViewAdapater(this));
-		wheel_meter.setCurrentItem((int)(Math.random() * 10));
-		wheel_meter.setVisibleItems(3);
-		wheel_meter.measure(wheel_meter.getWidth(), wheel_meter.getHeight());
-		wheel_meter.addChangingListener(this);
-		//wheel_meter.addScrollingListener(scrolledListener);
-		wheel_meter.setCyclic(true);
-		wheel_meter.setEnabled(true);      */
-	
+
 		/**
 		 * Initialize tempo
 		 */
 		setTempo(125);
-
-
-
 	}
 
 	public void initializeAnimation() {
@@ -285,30 +279,32 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 				cursor.setVisibility(ImageView.INVISIBLE);
 			}
 			break;
-			
+
 		case R.id.button_micro:
 
 			int time = tap_listener.tick();
 			if (time != -1)
 				setTempo(MetronomeTicker.toBPM(time));
 			break;
-			
+
 		case R.id.button_first_note:
 			button_note1.setVisible(!button_note1.isVisible());
+			System.out.println("first note");
 			break;
-			
+
 		case R.id.button_second_note:
 			button_note2.setVisible(!button_note2.isVisible());
 			break;
-			
+
 		case R.id.button_third_note:
 			button_note3.setVisible(!button_note3.isVisible());
 			break;
-			
+
 		case R.id.button_fourth_note:
 			button_note4.setVisible(!button_note4.isVisible());
 			break;
-			
+
+		default:
 		}
 	}
 
@@ -327,6 +323,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		case R.id.button_minus:
 			wheel.rotate(Constants.LEFT);
 			break;
+		default:
 
 		}
 	}
@@ -425,12 +422,10 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	 */
 	public void onChanged(WheelView wheel, int oldValue, int newValue) {
 		switch (wheel.getId()) {
-		case 0 : ;
-
+		case 0:
 			ticker.timePerMeasure = newValue;
-
 			break;
-
+		default:
 
 		}
 	}
