@@ -1,5 +1,7 @@
 package ch.reevolt.metronome.tools;
 
+import ch.reevolt.java.Ticker;
+
 public class MetronomeTicker extends Ticker implements Ticker.OnTickListener {
 
 	public enum Note {
