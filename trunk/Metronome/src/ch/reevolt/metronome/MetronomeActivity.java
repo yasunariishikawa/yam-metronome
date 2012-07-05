@@ -1,19 +1,8 @@
 package ch.reevolt.metronome;
 
-<<<<<<< .mine
-=======
-
->>>>>>> .r35
-import kankan.wheel.widget.OnWheelChangedListener;
-import kankan.wheel.widget.WheelView;
-<<<<<<< .mine
 import ch.reevolt.android.graphics.widget.ButtonImageView;
 import ch.reevolt.android.graphics.widget.ButtonImageView.OnClickedListener;
 import ch.reevolt.android.sound.SoundManager;
-=======
-import ch.reevolt.metronome.graphic.ButtonImageView;
-import ch.reevolt.metronome.graphic.ButtonImageView.OnClickedListener;
->>>>>>> .r35
 import ch.reevolt.metronome.tools.Listener;
 import ch.reevolt.metronome.tools.MetronomeTicker;
 import ch.reevolt.metronome.tools.MetronomeTicker.Note;
@@ -30,7 +19,6 @@ import android.os.Vibrator;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
@@ -41,8 +29,7 @@ import it.sephiroth.android.wheel.view.Wheel;
 import it.sephiroth.android.wheel.view.Wheel.OnScrollListener;
 
 public class MetronomeActivity extends Activity implements OnScrollListener,
-		OnClickedListener, OnClickListener, OnMetronomeTickListener,
-		OnWheelChangedListener {
+		OnClickedListener, OnMetronomeTickListener {
 
 	// used to catch asynchronous tasks
 	private Handler handler;
@@ -56,9 +43,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	// the tempo wheel
 	Wheel wheel;
 
-	// the meter wheel
-	WheelView wheel_meter;
-
 	//
 	TextView tempo_view_int;
 	TextView tempo_view_string;
@@ -67,8 +51,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	Listener tap_listener;
 
 	// all buttons
-	ImageView button_plus;
-	ImageView button_minus;
 	ButtonImageView button_state;
 	ButtonImageView button_micro;
 	ButtonImageView button_settings;
@@ -78,6 +60,15 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	ButtonImageView button_note2;
 	ButtonImageView button_note3;
 	ButtonImageView button_note4;
+
+	// meter button
+	ButtonImageView button_binary;
+	ButtonImageView button_ternary;
+
+	// subdivision button
+	ButtonImageView button_croche;
+	ButtonImageView button_double;
+	ButtonImageView button_triolet;
 
 	// cursor layout
 	FrameLayout layout_cursor_container;
@@ -154,14 +145,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 */
 		button_state = (ButtonImageView) findViewById(R.id.button_state);
 		button_state.setOnClickedListener(this);
-
-		/**
-		 * set listener for plus and minus button
-		 */
-		button_plus = (ImageView) findViewById(R.id.button_plus);
-		button_plus.setOnClickListener(this);
-		button_minus = (ImageView) findViewById(R.id.button_minus);
-		button_minus.setOnClickListener(this);
 		button_micro = (ButtonImageView) findViewById(R.id.button_micro);
 		button_micro.setOnClickedListener(this);
 		button_micro.setBehavior(ButtonImageView.Behavior.PUSH);
@@ -171,12 +154,47 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 */
 		button_note1 = (ButtonImageView) findViewById(R.id.button_first_note);
 		button_note1.setOnClickedListener(this);
+		button_note1.setAlphaValueDisabled(50);
+		button_note1.setEnable(false);
 		button_note2 = (ButtonImageView) findViewById(R.id.button_second_note);
 		button_note2.setOnClickedListener(this);
+		button_note2.setAlphaValueDisabled(50);
+		button_note2.setEnable(false);
 		button_note3 = (ButtonImageView) findViewById(R.id.button_third_note);
 		button_note3.setOnClickedListener(this);
+		button_note3.setAlphaValueDisabled(50);
+		button_note3.setEnable(false);
 		button_note4 = (ButtonImageView) findViewById(R.id.button_fourth_note);
 		button_note4.setOnClickedListener(this);
+		button_note4.setAlphaValueDisabled(50);
+		button_note4.setEnable(false);
+
+		/**
+		 * set meter button
+		 */
+		button_binary = (ButtonImageView) findViewById(R.id.binary);
+		button_binary.setOnClickedListener(this);
+		button_binary.setAlphaValueDisabled(50);
+		button_ternary = (ButtonImageView) findViewById(R.id.ternary);
+		button_ternary.setOnClickedListener(this);
+		button_ternary.setEnable(false);
+		button_ternary.setAlphaValueDisabled(50);
+
+		/**
+		 * set subdivision buttons
+		 */
+		button_croche = (ButtonImageView) findViewById(R.id.button_sub_croche);
+		button_croche.setOnClickedListener(this);
+		button_croche.setAlphaValueDisabled(50);
+		button_croche.setEnable(false);
+		button_double = (ButtonImageView) findViewById(R.id.button_sub_double);
+		button_double.setOnClickedListener(this);
+		button_double.setAlphaValueDisabled(50);
+		button_double.setEnable(false);
+		button_triolet = (ButtonImageView) findViewById(R.id.button_sub_triolet);
+		button_triolet.setOnClickedListener(this);
+		button_triolet.setAlphaValueDisabled(50);
+		button_triolet.setEnable(false);
 
 		/**
 		 * cursor layout
@@ -196,7 +214,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		SoundManager.getInstance();
 		SoundManager.initSounds(this);
 		SoundManager.addSound(0, R.raw.tick_down);
-		SoundManager.addSound(0, R.raw.tick);
+		SoundManager.addSound(1, R.raw.tick);
 
 		/**
 		 * The tempo listener
@@ -229,7 +247,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 
 		// increment or decrement tempo
 		ticker.setTempo(tempo);
-
+		
 		// display tempo
 		tempo_view_string.setText("" + ticker.getTempoName());
 		tempo_view_int.setText("" + ticker.getTempo());
@@ -304,27 +322,35 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 			button_note4.setVisible(!button_note4.isVisible());
 			break;
 
-		default:
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.view.View.OnClickListener#onClick(android.view.View)
-	 */
-	public void onClick(View v) {
-		switch (v.getId()) {
-
-		case R.id.button_plus:
-			wheel.rotate(Constants.RIGHT);
-
+		case R.id.binary:
+			button_binary.setVisible(true);
+			button_ternary.setVisible(false);
 			break;
-		case R.id.button_minus:
-			wheel.rotate(Constants.LEFT);
-			break;
-		default:
 
+		case R.id.ternary:
+			button_binary.setVisible(false);
+			button_ternary.setVisible(true);
+			break;
+			
+		case R.id.button_sub_croche:
+			button_croche.setVisible(!button_croche.isVisible());
+			button_double.setVisible(false);
+			button_triolet.setVisible(false);
+			break;
+			
+		case R.id.button_sub_double:
+			button_croche.setVisible(false);
+			button_double.setVisible(!button_double.isVisible());
+			button_triolet.setVisible(false);
+			break;
+			
+		case R.id.button_sub_triolet:
+			button_croche.setVisible(false);
+			button_double.setVisible(false);
+			button_triolet.setVisible(!button_triolet.isVisible());
+			break;
+
+		default:
 		}
 	}
 
@@ -411,23 +437,6 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 	 */
 	public void onTickCanceled() {
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * kankan.wheel.widget.OnWheelChangedListener#onChanged(kankan.wheel.widget
-	 * .WheelView, int, int)
-	 */
-	public void onChanged(WheelView wheel, int oldValue, int newValue) {
-		switch (wheel.getId()) {
-		case 0:
-			ticker.timePerMeasure = newValue;
-			break;
-		default:
-
-		}
 	}
 
 }
