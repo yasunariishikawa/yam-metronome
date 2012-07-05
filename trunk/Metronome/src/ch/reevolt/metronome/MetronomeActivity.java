@@ -140,6 +140,7 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 
 		tempo_view_string = (TextView) findViewById(R.id.tempo_txt);
 
+			
 		/**
 		 * set listener for play/pause button
 		 */
@@ -154,19 +155,15 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 */
 		button_note1 = (ButtonImageView) findViewById(R.id.button_first_note);
 		button_note1.setOnClickedListener(this);
-		button_note1.setAlphaValueDisabled(50);
 		button_note1.setEnable(false);
 		button_note2 = (ButtonImageView) findViewById(R.id.button_second_note);
 		button_note2.setOnClickedListener(this);
-		button_note2.setAlphaValueDisabled(50);
 		button_note2.setEnable(false);
 		button_note3 = (ButtonImageView) findViewById(R.id.button_third_note);
 		button_note3.setOnClickedListener(this);
-		button_note3.setAlphaValueDisabled(50);
 		button_note3.setEnable(false);
 		button_note4 = (ButtonImageView) findViewById(R.id.button_fourth_note);
 		button_note4.setOnClickedListener(this);
-		button_note4.setAlphaValueDisabled(50);
 		button_note4.setEnable(false);
 
 		/**
@@ -174,26 +171,21 @@ public class MetronomeActivity extends Activity implements OnScrollListener,
 		 */
 		button_binary = (ButtonImageView) findViewById(R.id.binary);
 		button_binary.setOnClickedListener(this);
-		button_binary.setAlphaValueDisabled(50);
 		button_ternary = (ButtonImageView) findViewById(R.id.ternary);
 		button_ternary.setOnClickedListener(this);
 		button_ternary.setEnable(false);
-		button_ternary.setAlphaValueDisabled(50);
 
 		/**
 		 * set subdivision buttons
 		 */
 		button_croche = (ButtonImageView) findViewById(R.id.button_sub_croche);
 		button_croche.setOnClickedListener(this);
-		button_croche.setAlphaValueDisabled(50);
 		button_croche.setEnable(false);
 		button_double = (ButtonImageView) findViewById(R.id.button_sub_double);
 		button_double.setOnClickedListener(this);
-		button_double.setAlphaValueDisabled(50);
 		button_double.setEnable(false);
 		button_triolet = (ButtonImageView) findViewById(R.id.button_sub_triolet);
 		button_triolet.setOnClickedListener(this);
-		button_triolet.setAlphaValueDisabled(50);
 		button_triolet.setEnable(false);
 
 		/**
